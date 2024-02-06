@@ -19,25 +19,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"yijingjia.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="机器学习初级选手">
-<meta property="og:type" content="website">
-<meta property="og:title" content="林间得鹿">
-<meta property="og:url" content="http://yijingjia.github.io/index.html">
+    <meta name="description" content="广播 broadcast广播（broadcast）是Python numpy库中十分常用的功能之一。针对不同形状的数组，依据一定规则进行元素的运算，一般是“较小的数据在较大的数组上广播”，以便兼容不同的形状。   计算对象数组形状相同当计算对象数数组形状相同，不会触发广播功能。比如下面两个数组进行加法运算：   1234567import numpy as npa &#x3D; np.array([[ 4,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="numpy广播broadcast与newaxis()函数详解">
+<meta property="og:url" content="http://yijingjia.github.io/2024/02/06/0005-numpy-broadcasting-and-newaixs-function/index.html">
 <meta property="og:site_name" content="林间得鹿">
-<meta property="og:description" content="机器学习初级选手">
+<meta property="og:description" content="广播 broadcast广播（broadcast）是Python numpy库中十分常用的功能之一。针对不同形状的数组，依据一定规则进行元素的运算，一般是“较小的数据在较大的数组上广播”，以便兼容不同的形状。   计算对象数组形状相同当计算对象数数组形状相同，不会触发广播功能。比如下面两个数组进行加法运算：   1234567import numpy as npa &#x3D; np.array([[ 4,">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-06T05:26:53.000Z">
+<meta property="article:modified_time" content="2024-02-06T08:36:20.716Z">
 <meta property="article:author" content="林间得鹿">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="numpy">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://yijingjia.github.io/">
+<link rel="canonical" href="http://yijingjia.github.io/2024/02/06/0005-numpy-broadcasting-and-newaixs-function/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://yijingjia.github.io/2024/02/06/0005-numpy-broadcasting-and-newaixs-function/","path":"2024/02/06/0005-numpy-broadcasting-and-newaixs-function/","title":"numpy广播broadcast与newaxis()函数详解"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>林间得鹿</title>
+<title>numpy广播broadcast与newaxis()函数详解 | 林间得鹿</title>
   
 
   <script src="/js/third-party/analytics/baidu-analytics.js"></script>
@@ -72,7 +76,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">林间得鹿</h1>
+      <p class="site-title">林间得鹿</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -98,7 +102,7 @@
   
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -111,6 +115,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E6%92%AD-broadcast"><span class="nav-number">1.</span> <span class="nav-text">广播 broadcast</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84%E5%BD%A2%E7%8A%B6%E7%9B%B8%E5%90%8C"><span class="nav-number">1.1.</span> <span class="nav-text">计算对象数组形状相同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84%E5%BD%A2%E7%8A%B6%E4%B8%8D%E5%90%8C"><span class="nav-number">1.2.</span> <span class="nav-text">计算对象数组形状不同</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#numpy-newaxis-%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">numpy.newaxis 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E8%A1%8C%E6%96%B9%E5%90%91%E5%A2%9E%E5%8A%A0%E7%BB%B4%E5%BA%A6"><span class="nav-number">2.1.</span> <span class="nav-text">在行方向增加维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%88%97%E6%96%B9%E5%90%91%E5%A2%9E%E5%8A%A0%E7%BB%B4%E5%BA%A6"><span class="nav-number">2.2.</span> <span class="nav-text">在列方向增加维度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E5%A2%9E%E5%8A%A0%E7%BB%B4%E5%BA%A6"><span class="nav-number">2.3.</span> <span class="nav-text">多维数组增加维度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E6%92%ADbroadcast%E4%B8%8Enewaxis%E7%BB%93%E5%90%88%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">广播broadcast与newaxis结合使用</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -149,16 +154,17 @@
 
     </div>
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/02/06/0005-numpy-broadcasting-and-newaixs-function/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -172,13 +178,13 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 林间得鹿">
+      <meta itemprop="name" content="numpy广播broadcast与newaxis()函数详解 | 林间得鹿">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/02/06/0005-numpy-broadcasting-and-newaixs-function/" class="post-title-link" itemprop="url">numpy广播broadcast与newaxis()函数详解</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          numpy广播broadcast与newaxis()函数详解
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -214,8 +220,7 @@
     
     
     
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="广播-broadcast"><a href="#广播-broadcast" class="headerlink" title="广播 broadcast"></a>广播 broadcast</h2><p>广播（broadcast）是Python numpy库中十分常用的功能之一。针对不同形状的数组，依据一定规则进行元素的运算，一般是“较小的数据在较大的数组上广播”，以便兼容不同的形状。  </p>
+    <div class="post-body" itemprop="articleBody"><h2 id="广播-broadcast"><a href="#广播-broadcast" class="headerlink" title="广播 broadcast"></a>广播 broadcast</h2><p>广播（broadcast）是Python numpy库中十分常用的功能之一。针对不同形状的数组，依据一定规则进行元素的运算，一般是“较小的数据在较大的数组上广播”，以便兼容不同的形状。  </p>
 <h3 id="计算对象数组形状相同"><a href="#计算对象数组形状相同" class="headerlink" title="计算对象数组形状相同"></a>计算对象数组形状相同</h3><p>当计算对象数数组形状相同，不会触发广播功能。<br>比如下面两个数组进行加法运算：  </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">a = np.array([[ <span class="number">4</span>,  <span class="number">7</span>,  <span class="number">9</span>], </span><br><span class="line">              [<span class="number">10</span>,  <span class="number">2</span>, <span class="number">10</span>]])</span><br><span class="line">b = np.array([[ <span class="number">3</span>,  <span class="number">2</span>,  <span class="number">6</span>], </span><br><span class="line">              [ <span class="number">8</span>,  <span class="number">1</span>,  <span class="number">5</span>]])</span><br><span class="line">a + b</span><br></pre></td></tr></table></figure>
 
@@ -256,7 +261,6 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a[:, np.newaxis]</span><br><span class="line">array([[ <span class="number">0</span>],</span><br><span class="line">       [<span class="number">10</span>],</span><br><span class="line">       [<span class="number">20</span>],</span><br><span class="line">       [<span class="number">30</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a[:, np.newaxis].shape</span><br><span class="line">(<span class="number">4</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <p>在与b相乘时，a[:, np.newaxis]和b都根据对方维度进行了广播，相当于将形状为（4，1）的a[:, np.newaxis]，变成了形状为（4，3）的a1，将形状为（3，）的一维数组b，变成了形状为（4，3）的二维数组b1，然后进行元素的乘法运算。<br>也就是说，将a矩阵维度为1的维度根据b的相应维度进行了“拉伸”，同样，将b矩阵维度为1的维度根据a的相应维度进行了“拉伸”，分别对齐到了各方向上最大的维度。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>a1 = np.array([[ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line"><span class="meta">... </span>               [<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>],</span><br><span class="line"><span class="meta">... </span>               [<span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>],</span><br><span class="line"><span class="meta">... </span>               [<span class="number">30</span>, <span class="number">30</span>, <span class="number">30</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>b1 = np.array([[ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>],</span><br><span class="line"><span class="meta">... </span>               [ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>],</span><br><span class="line"><span class="meta">... </span>               [ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>],</span><br><span class="line"><span class="meta">... </span>               [ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>]])</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a1 * b1</span><br><span class="line">array([[ <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">0</span>],</span><br><span class="line">       [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>],</span><br><span class="line">       [<span class="number">20</span>, <span class="number">40</span>, <span class="number">60</span>],</span><br><span class="line">       [<span class="number">30</span>, <span class="number">60</span>, <span class="number">90</span>]])</span><br></pre></td></tr></table></figure>
-      
     </div>
 
     
@@ -264,364 +268,26 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/numpy/" rel="tag"># numpy</a>
+          </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/02/06/0004-Andrew-Ng-Deep-Learning-Course-Week1-Notes/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="林间得鹿">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="林间得鹿">
-      <meta itemprop="description" content="机器学习初级选手">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 林间得鹿">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/02/06/0004-Andrew-Ng-Deep-Learning-Course-Week1-Notes/" class="post-title-link" itemprop="url">0004.Andrew Ng Deep Learning Course Week1 Notes</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2024-02-06 11:56:28 / 修改时间：16:04:47" itemprop="dateCreated datePublished" datetime="2024-02-06T11:56:28+08:00">2024-02-06</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>开始自学吴恩达（Andrew Ng）与DeepLearning.AI合作、在Coursera上的深度学习系列课程（Deep Learning Specialization）。<br>该系列包含5个独立的课程：</p>
-<ol>
-<li>神经网络和深度学习<br>Neural Networks and Deep Learning</li>
-<li>改进深度神经网络：超参数调整、正则化和优化<br>Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimizaton</li>
-<li>构建机器学习项目<br>Structuring Machine Learning Projects</li>
-<li>卷积神经网络<br>Convolutional Neural Networks</li>
-<li>Sequence Models<br>序列模型</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/02/01/0003.How-to-set-up-your-Hexo-NexT-theme/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="林间得鹿">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="林间得鹿">
-      <meta itemprop="description" content="机器学习初级选手">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 林间得鹿">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/02/01/0003.How-to-set-up-your-Hexo-NexT-theme/" class="post-title-link" itemprop="url">个性化设置Hexo博客的NexT主题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-02-01 10:51:56" itemprop="dateCreated datePublished" datetime="2024-02-01T10:51:56+08:00">2024-02-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-02 11:14:41" itemprop="dateModified" datetime="2024-02-02T11:14:41+08:00">2024-02-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Hexo%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">Hexo搭建与使用</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>给基于Hexo+GitHub搭建的博客下载并安装NexT主题后，发现自己博客呈现的效果跟主题的预览网站好像哪里不太一样。<br>看了一下文档，发现还是要自己修改主题的CSS代码，根据自己喜好来手动设置才成。于是得鹿自己动手丰衣足食，根据NexT的<a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/">设置文档</a>，给博客进行了个性化设置。  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/02/01/0003.How-to-set-up-your-Hexo-NexT-theme/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/01/31/Use-root-user-on-mac/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="林间得鹿">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="林间得鹿">
-      <meta itemprop="description" content="机器学习初级选手">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 林间得鹿">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/31/Use-root-user-on-mac/" class="post-title-link" itemprop="url">在Mac上启用并切换root用户</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-01-31 14:41:15" itemprop="dateCreated datePublished" datetime="2024-01-31T14:41:15+08:00">2024-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-01 17:17:55" itemprop="dateModified" datetime="2024-02-01T17:17:55+08:00">2024-02-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Mac%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">Mac使用</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在Mac的终端通过命令行安装软件或者修改文件时，会遇到权限不足的情况，需要切换到root用户才能进行操作。<br>由于Mac默认不启用root用户，因此需要手动启用root用户，再切换到root进行操作。  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/01/31/Use-root-user-on-mac/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/06/0004-Andrew-Ng-Deep-Learning-Course-Week1-Notes/" rel="prev" title="0004.Andrew Ng Deep Learning Course Week1 Notes">
+                  <i class="fa fa-angle-left"></i> 0004.Andrew Ng Deep Learning Course Week1 Notes
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/01/31/How-to-build-up-a-blog-site-using-Hexo-and-GitHub-Pages/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="林间得鹿">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="林间得鹿">
-      <meta itemprop="description" content="机器学习初级选手">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 林间得鹿">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/31/How-to-build-up-a-blog-site-using-Hexo-and-GitHub-Pages/" class="post-title-link" itemprop="url">Hexo + GitHub搭建个人博客（Mac版）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-01-31 13:17:00" itemprop="dateCreated datePublished" datetime="2024-01-31T13:17:00+08:00">2024-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-02 11:31:57" itemprop="dateModified" datetime="2024-02-02T11:31:57+08:00">2024-02-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Hexo%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">Hexo搭建与使用</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最好的学习方式是思考和分享，写代码的过程中总是希望有个自己的网站记录和分享学习过程。<br>查到GitHub+Hexo是目前主流的博客搭建方式、参考多个建站资料帖子后，基于Mac系统进行了博客搭建，同时将搭建过程进行了完整记录，并添加了建站过程中遇到的问题及解决方法。  </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/01/31/How-to-build-up-a-blog-site-using-Hexo-and-GitHub-Pages/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+            <div class="post-nav-item">
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          </div>
     </footer>
   </article>
 </div>
+
 
 
 
