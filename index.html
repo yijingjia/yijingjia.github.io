@@ -123,7 +123,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,148 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/02/06/0006-Neural-Networks-and-Deep-Learning-Week1-Notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="林间得鹿">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="林间得鹿">
+      <meta itemprop="description" content="机器学习初级选手">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 林间得鹿">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/06/0006-Neural-Networks-and-Deep-Learning-Week1-Notes/" class="post-title-link" itemprop="url">【吴恩达深度学习课程】神经网络与深度学习 课程笔记 第一周</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2024-02-06 17:34:42" itemprop="dateCreated datePublished" datetime="2024-02-06T17:34:42+08:00">2024-02-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-02-07 09:16:28" itemprop="dateModified" datetime="2024-02-07T09:16:28+08:00">2024-02-07</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="神经网络与深度学习-Neural-Networks-and-Deep-Learning-课程笔记-第一周"><a href="#神经网络与深度学习-Neural-Networks-and-Deep-Learning-课程笔记-第一周" class="headerlink" title="神经网络与深度学习 Neural Networks and Deep Learning 课程笔记 第一周"></a>神经网络与深度学习 Neural Networks and Deep Learning 课程笔记 第一周</h1><h2 id="深度学习简介"><a href="#深度学习简介" class="headerlink" title="深度学习简介"></a>深度学习简介</h2><h3 id="什么是神经网络"><a href="#什么是神经网络" class="headerlink" title="什么是神经网络"></a>什么是神经网络</h3><p>深度学习一般是指训练神经网络。那么什么是神经网络？课程以房价预测的例子来说明神经网络的概念。<br>假设我们有包含6所房子的数据集，数据集包含房子的大小和价格信息。将数据集信息绘制成散点图如下：  </p>
+<p><img src="/../images/0006_001.png" alt="Alt text"></p>
+<p>运用统计知识，经过线性回归，我们拟合得到一个函数，它可以根据房子的大小预测房子的价格。由于价格不可能小于零，我们将该函数表示成蓝色线条部分，即小于一定价格时，价格为0。<br>那么这个经过拟合得到的方程，就是一个最简单的<strong>神经网络</strong>。我们用房子的大小x作为神经网络的输入，x输入到节点（图上的小圈）中，经过节点处理输出了房价y。这个节点就是神经网络中的一个神经元（neuron），它会执行前面拟合的方程，结果取max(0,y)，输出预估价格。  </p>
+<p><img src="/../images/0006_002.png" alt="Alt text"></p>
+<p>这个输出结果前半部分是0，后半部分是直线的方程叫做ReLU函数，即线性整流函数（Rectified Linear Unit），它也是神经网络中常用的激活函数。</p>
+<p>多个上述类似的神经元neuron叠加，就组成了神经网络。  </p>
+<p>继续使用房价预测的例子，出了房屋面积大小（size）外，卧室数量（#bedrooms）、位置（zip code）以及社区富裕程度（wealth）等都是影响房价的因素。当这些因素都作为神经元的输入，最终预测出房价时，会用到多个神经元的处理，这就组成了一个稍复杂的神经网络。  </p>
+<p><img src="/../images/0006_003.png" alt="Alt text"></p>
+<h3 id="使用神经网络进行监督学习"><a href="#使用神经网络进行监督学习" class="headerlink" title="使用神经网络进行监督学习"></a>使用神经网络进行监督学习</h3><blockquote>
+<p><strong>监督学习</strong><br>监督学习（Supervised Learning）是机器学习领域中的一种主要学习方式，它涉及从已知的训练数据中学习模式和规律，以便能够对新的、未知的数据进行预测或分类。在监督学习中，模型根据输入数据和对应的标签之间的关系来进行学习，从而能够在给定新的输入时，对其进行合适的预测或分类。</p>
+</blockquote>
+<p>目前为止，几乎所有通过神经网络创造的经济价值都是利用了<strong>监督学习</strong>的机器学习方式。很多有（经济）价值的发明，比如在线广告推送，都是通过神经网络在特定问题下来巧妙地建立x对应y的函数映射关系，并且通过监督学习拟合数据，成为某个复杂系统的一部分。</p>
+<p><strong>使用神经网络进行监督学习的应用</strong>  </p>
+<table>
+<thead>
+<tr>
+<th>输入（x）</th>
+<th>输出（y）</th>
+<th>应用</th>
+<th>技术</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>房屋特征</td>
+<td>价格</td>
+<td>房产应用</td>
+<td>标准神经网络standard Neural Network</td>
+</tr>
+<tr>
+<td>广告，用户信息</td>
+<td>是否点击广告？（0&#x2F;1）</td>
+<td>在线广告</td>
+<td>标准神经网络standard Neural Network</td>
+</tr>
+<tr>
+<td>图片</td>
+<td>图片对象object（1，……，1000）</td>
+<td>图像打标（tagging）</td>
+<td>卷积神经网络Convolutional Neural Network</td>
+</tr>
+<tr>
+<td>音频</td>
+<td>翻译脚本</td>
+<td>语音识别</td>
+<td>递归神经网络Recurrent Neural Network</td>
+</tr>
+<tr>
+<td>英文</td>
+<td>中文</td>
+<td>机器翻译</td>
+<td>递归神经网络Recurrent Neural Network</td>
+</tr>
+<tr>
+<td>图像，雷达信息</td>
+<td>车辆位置</td>
+<td>自动驾驶</td>
+<td>定制&#x2F;混合神经网络Custom&#x2F;Hybrid Neural Network</td>
+</tr>
+</tbody></table>
+<p><img src="/../images/0006_004.png" alt="Alt text"></p>
+<p>上面举的房价预测的例子，它的数据是结构化数据，可能讲房屋大小等信息以一定的结构存在数据库中。但是类似于音频、视频、图片等，则是非结构化的。人类其实更容易理解非结构化的数据，虽然过去对于计算机来说，学习非结构化数据比学习结构化数据困难得多。  </p>
+<p>但是，神经网络崛起后，它带来的深度学习使得计算机比前些年更好地解释非结构化数据，并且深度学习技术实现了很多应用，比如语音识别、图像识别、自然语言处理等。  </p>
+<p>所以，神经网络已经变革了监督学习方式，那么为什么神经网络背后的基础技术原理已经发展了几十年，但是神经网络本身直到近年才有更好的表现？简单来说，最重要的原因就是用来训练神经网络的数据量在近年爆炸性增长。  </p>
+<h3 id="为什么神经网络会兴起"><a href="#为什么神经网络会兴起" class="headerlink" title="为什么神经网络会兴起"></a>为什么神经网络会兴起</h3><p>下图可以看到，随着数据量增多，不同大小的神经网络的表现如何：</p>
+<p><img src="/../images/0006_005.png" alt="Alt text"></p>
+<p>从上图可以看出，在较小数据规模的区间内，无论是大中小型神经网络，表现差距不大。<br>但是随着数据量增加，它们的表现也随之拉开差距。神经网络的规模效应明显，规模越大，表现越好。<br>此外，计算机计算能力的提高也显著缩小的训练神经网络所需的时间。算力的提高，让我们能够更快得到训练结果，提高训练效率。<br>同样，算法的创新，比如激活函数从sigmoid到ReLU的迁移，也提高了神经网络的运行速度。  </p>
+<p>第一周主要概要介绍了神经网络的概念，从第二周开始，会讲解神经网络的具体知识。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -299,7 +441,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/02/06/0004-Andrew-Ng-Deep-Learning-Course-Week1-Notes/" class="post-title-link" itemprop="url">0004.Andrew Ng Deep Learning Course Week1 Notes</a>
+          <a href="/2024/02/06/0004-Andrew-Ng-Deep-Learning-Course-Week1-Notes/" class="post-title-link" itemprop="url">0004.Andrew Ng Deep Learning Course Notes</a>
         </h2>
 
         <div class="post-meta-container">
@@ -311,7 +453,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2024-02-06 11:56:28 / 修改时间：16:04:47" itemprop="dateCreated datePublished" datetime="2024-02-06T11:56:28+08:00">2024-02-06</time>
+      <time title="创建时间：2024-02-06 11:56:28 / 修改时间：17:34:56" itemprop="dateCreated datePublished" datetime="2024-02-06T11:56:28+08:00">2024-02-06</time>
     </span>
 
   
@@ -330,8 +472,9 @@
 <li>改进深度神经网络：超参数调整、正则化和优化<br>Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimizaton</li>
 <li>构建机器学习项目<br>Structuring Machine Learning Projects</li>
 <li>卷积神经网络<br>Convolutional Neural Networks</li>
-<li>Sequence Models<br>序列模型</li>
+<li>序列模型<br>Sequence Models</li>
 </ol>
+<p>每门更新门课程的笔记和作业会根据学习进度更新。</p>
 
       
     </div>
