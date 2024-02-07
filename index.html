@@ -123,7 +123,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -150,6 +150,99 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/02/07/0007-How-to-add-a-draft-blog-article/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="林间得鹿">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="林间得鹿">
+      <meta itemprop="description" content="机器学习初级选手">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 林间得鹿">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/07/0007-How-to-add-a-draft-blog-article/" class="post-title-link" itemprop="url">使用草稿方式写作Hexo博客</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-02-07 09:50:57 / 修改时间：10:01:55" itemprop="dateCreated datePublished" datetime="2024-02-07T09:50:57+08:00">2024-02-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Hexo%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">Hexo搭建与使用</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在写作Hexo博客时，经常有几篇博文同时在构思，直接使用”hexo new &lt;article title&gt;”创建的博文，在执行”hexo d”的时候会直接部署到博客正式发表。<br>但此时，可能同时进行写作的其他博文还没有完成，就会出现未完成博文也同时被正式部署的尴尬情况。  </p>
+<p>在这种情况下，我们可以使用hexo博客的草稿功能。所谓草稿，就是我们创建的博文作为草稿单独存放，等编辑完成后，再放置到正式发布用的文件夹。作为草稿的文章，不会在执行”hexo d”时被部署。  </p>
+<h3 id="创建草稿文章"><a href="#创建草稿文章" class="headerlink" title="创建草稿文章"></a>创建草稿文章</h3><p>草稿其实是Hexo的一种特殊布局:draft，它在建立时会被保存到”博客根目录&#x2F;source&#x2F;_drafts”文件夹，而非draft布局的文章会被保存到”博客根目录&#x2F;source&#x2F;_posts”文件夹。</p>
+<p><strong>创建草稿</strong><br>打开终端Terminal，切换（cd）到博客根目录，执行下面语句：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new draft <span class="string">&quot;0007.How to add a draft blog article&quot;</span></span><br></pre></td></tr></table></figure>
+<p>命令执行后，可以在”博客根目录&#x2F;source&#x2F;_drafts”找到该文章，但_posts&#x2F;文件夹下不存在该文章。  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> <span class="built_in">source</span></span><br><span class="line">$ <span class="built_in">ls</span> _drafts/</span><br><span class="line">0007-How-to-add-a-draft-blog-article.md</span><br><span class="line">$ <span class="built_in">ls</span> _posts/0007-How-to-add-a-draft-blog-article.md</span><br><span class="line"><span class="built_in">ls</span>: _posts/0007-How-to-add-a-draft-blog-article.md: No such file or directory</span><br></pre></td></tr></table></figure>
+<p>打开文章的md文件，可以看到文章已经自动生成了文件头：  </p>
+<figure class="highlight md"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 0007.How to add a draft blog article</span><br><span class="line"><span class="section">tags:</span></span><br><span class="line"><span class="section">---</span></span><br></pre></td></tr></table></figure>
+
+<p>此时，即使执行”hexo g”，草稿文章也不会生成静态页面，因此执行”hexo s”也无法本地预览。</p>
+<h3 id="publish草稿"><a href="#publish草稿" class="headerlink" title="publish草稿"></a>publish草稿</h3><p>编辑md文件完成博文写作后，可以将文章移动到_posts&#x2F;文件夹中，就可以作为部署对象了。执行下面命令，将文章从_drafts&#x2F;文件夹转移到_posts&#x2F;文件夹。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo publish <span class="string">&quot;0007.How to add a draft blog article&quot;</span></span><br><span class="line">$ <span class="built_in">ls</span> _posts/0007-How-to-add-a-draft-blog-article.md  <span class="comment"># _posts文件夹下已存在该文章</span></span><br><span class="line">_posts/0007-How-to-add-a-draft-blog-article.md</span><br></pre></td></tr></table></figure>
+
+<p>综上，我们可以使用hexo的草稿功能编辑文章而不影响其他文章的发表。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
