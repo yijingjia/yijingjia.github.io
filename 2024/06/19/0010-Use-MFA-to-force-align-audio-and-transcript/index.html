@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha256-yIDrPSXHZdOZhAqiBP7CKzIwMQmRCJ8UeB8Jo17YC4o=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yijingjia.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="MFA是基于Kaldi的强制对齐工具。它可以将音频信号中的每个声音片段与相应的文本对齐，以确定每个词或音素的开始和结束时间。 其中，Kaldi是目前最流行的开源自动语音识别Automatic speech recognition (ASR)工具箱,包含了几乎所有目前主流ASR系统用到的算法，代码使用C++编写。具体的介绍可参考Kaldi官网，也可以参考Kaldi Tutorial文档。 本文想要实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强制对齐音频与转录文本 - MFA的安装及使用">
+<meta property="og:url" content="http://yijingjia.github.io/2024/06/19/0010-Use-MFA-to-force-align-audio-and-transcript/index.html">
+<meta property="og:site_name" content="林间得鹿">
+<meta property="og:description" content="MFA是基于Kaldi的强制对齐工具。它可以将音频信号中的每个声音片段与相应的文本对齐，以确定每个词或音素的开始和结束时间。 其中，Kaldi是目前最流行的开源自动语音识别Automatic speech recognition (ASR)工具箱,包含了几乎所有目前主流ASR系统用到的算法，代码使用C++编写。具体的介绍可参考Kaldi官网，也可以参考Kaldi Tutorial文档。 本文想要实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yijingjia.github.io/2024/06/19/images/0010_001.png">
+<meta property="article:published_time" content="2024-06-19T05:37:22.000Z">
+<meta property="article:modified_time" content="2024-06-19T05:48:01.437Z">
+<meta property="article:author" content="林间得鹿">
+<meta property="article:tag" content="MFA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yijingjia.github.io/2024/06/19/images/0010_001.png">
+
+
+<link rel="canonical" href="http://yijingjia.github.io/2024/06/19/0010-Use-MFA-to-force-align-audio-and-transcript/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://yijingjia.github.io/2024/06/19/0010-Use-MFA-to-force-align-audio-and-transcript/","path":"2024/06/19/0010-Use-MFA-to-force-align-audio-and-transcript/","title":"强制对齐音频与转录文本 - MFA的安装及使用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>强制对齐音频与转录文本 - MFA的安装及使用 | 林间得鹿</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?233c9920e8cead30ecf73830ab0c0cb7"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">林间得鹿</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MFA%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">MFA安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8MFA%E5%AF%B9%E9%BD%90%E8%AF%AD%E9%9F%B3%E5%8F%8A%E6%96%87%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">使用MFA对齐语音及文本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E9%BD%90%E7%BB%93%E6%9E%9C%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">对齐结果可视化</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">林间得鹿</p>
+  <div class="site-description" itemprop="description">机器学习初级选手</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/06/19/0010-Use-MFA-to-force-align-audio-and-transcript/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="林间得鹿">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="林间得鹿">
+      <meta itemprop="description" content="机器学习初级选手">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="强制对齐音频与转录文本 - MFA的安装及使用 | 林间得鹿">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          强制对齐音频与转录文本 - MFA的安装及使用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-06-19 15:37:22 / 修改时间：15:48:01" itemprop="dateCreated datePublished" datetime="2024-06-19T15:37:22+10:00">2024-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AF%AD%E9%9F%B3%E5%A4%84%E7%90%86/" itemprop="url" rel="index"><span itemprop="name">语音处理</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://montreal-forced-aligner.readthedocs.io/en/latest/installation.html">MFA</a>是基于Kaldi的强制对齐工具。它可以将音频信号中的每个声音片段与相应的文本对齐，以确定每个词或音素的开始和结束时间。<br>
+其中，Kaldi是目前最流行的开源自动语音识别Automatic speech recognition (ASR)工具箱,包含了几乎所有目前主流ASR系统用到的算法，代码使用C++编写。具体的介绍可参考<a target="_blank" rel="noopener" href="https://www.kaldi-asr.org/doc/about.html">Kaldi官网</a>，也可以参考<a target="_blank" rel="noopener" href="https://eleanorchodroff.com/tutorial/kaldi/index.html">Kaldi Tutorial</a>文档。</p>
+<p>本文想要实现的功能是，将一段音频与音频对应的文本在单词级别进行对齐，并进行可视化。</p>
+<h2 id="MFA安装">MFA安装</h2>
+<p><strong>安装环境：</strong> Mac OS， M1芯片。</p>
+<p><strong>安装命令：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ conda create -n aligner -c conda-forge montreal-forced-aligner</span><br></pre></td></tr></table></figure>
+<p>执行上面命令后，查看即将安装的package列表，如果存在Kaldi，因此无需再单独安装。<br>
+如果命令执行成功，会创建一个名为aligner的conda环境,后续的对齐操作要在这个环境中进行。</p>
+<p><strong>更新MFA：</strong><br>
+执行下面命令，可将MFA更新到最新版本。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ conda update -c conda-forge montreal-forced-aligner kalpy kaldi=*=cpu* --update-deps</span><br></pre></td></tr></table></figure>
+<p><strong>激活环境：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ conda activate aligner </span><br></pre></td></tr></table></figure>
+<p><strong>下载模型：</strong><br>
+在<a target="_blank" rel="noopener" href="https://mfa-models.readthedocs.io/en/latest/">网页</a>中找到需要的模型及字典后，可以在Terminal使用命令行下载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载中文模型</span></span><br><span class="line">$ mfa models download acoustic mandarin_mfa</span><br><span class="line"><span class="comment"># 下载中文字典</span></span><br><span class="line">$ mfa model download dictionary mandarin_china_mfa</span><br></pre></td></tr></table></figure>
+<p><strong>其他依赖包：</strong><br>
+由于使用MFA对齐需要其他一些依赖包，比如spacy，用来进行tokenization。<br>
+执行下面命令进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">$ conda install spacy</span><br><span class="line"><span class="comment"># 安装英文语言模型</span></span><br><span class="line">$ python -m spacy download en_core_web_sm</span><br><span class="line"><span class="comment"># 安装中文语言模型</span></span><br><span class="line">$ python -m spacy download en_core_web_sm</span><br><span class="line"><span class="comment"># 中文 tokenization</span></span><br><span class="line">$ pip install spacy-pkuseg dragonmapper hanziconv</span><br></pre></td></tr></table></figure>
+<h2 id="使用MFA对齐语音及文本">使用MFA对齐语音及文本</h2>
+<p>执行对齐命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mfa align ./data mandarin_china_mfa mandarin_mfa ./data/result</span><br></pre></td></tr></table></figure>
+<p>./data路径下文件结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-data</span><br><span class="line">    -speaker1 # 第一个音频及文本所在的目录</span><br><span class="line">        -speaker1.wav # 第一个音频</span><br><span class="line">        -speaker1.txt # 第一个音频的转录文本</span><br><span class="line">    -speaker2 # 第二个音频及文本所在的目录</span><br><span class="line">        -speaker2.wav</span><br><span class="line">        -speaker2.txt</span><br><span class="line">    -result # 存放生成的TextGrid文件，对齐命令执行后生成下面文件</span><br><span class="line">        -speaker1</span><br><span class="line">            -speaker1.TextGrid</span><br><span class="line">        -speaker2</span><br><span class="line">            -speaker2.TextGrid</span><br></pre></td></tr></table></figure>
+<p>上述命令会将./data目录下的音频文件和文本文件中的内容对齐，生成.TextGrid文件。<br>
+.TextGrid文件是<a target="_blank" rel="noopener" href="https://www.fon.hum.uva.nl/praat/">Praat</a>软件用来存储音频标注的文件格式，这些标注通常用于表示音素、单词、短语或其他语音成分的时间边界。</p>
+<p>使用的音频内容是“我在学习中文”，.txt文件中是文字版。通过mfa的align功能对齐后，生成的.TextGrid会包含如下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1.	总时间范围：</span><br><span class="line">	xmin = 0</span><br><span class="line">	xmax = 3.584</span><br><span class="line">	这表示整个TextGrid文件覆盖从0秒到3.584秒的时间范围。</span><br><span class="line">2.	第一个IntervalTier (“words”)：</span><br><span class="line">	class = &quot;IntervalTier&quot;</span><br><span class="line">	name = &quot;words&quot; # 单词或短语</span><br><span class="line">	xmin = 0</span><br><span class="line">	xmax = 3.584</span><br><span class="line">	intervals: size = 6：这个层级包含6个时间间隔。</span><br><span class="line">	每个间隔有一个开始时间（xmin），结束时间（xmax），以及标注文本（text）。</span><br><span class="line">3.	第二个IntervalTier (“phones”)：</span><br><span class="line">	class = &quot;IntervalTier&quot; #音素</span><br><span class="line">	name = &quot;phones&quot;</span><br><span class="line">	xmin = 0</span><br><span class="line">	xmax = 3.584</span><br><span class="line">	intervals: size = 16：这个层级包含16个时间间隔。</span><br><span class="line">	每个间隔有一个开始时间（xmin），结束时间（xmax），以及标注文本（text）。</span><br></pre></td></tr></table></figure>
+<h2 id="对齐结果可视化">对齐结果可视化</h2>
+<p>下面是将其中一个.TextGrid文件可视化，得到的每个单词或短语对应的时间-频率图：</p>
+<p><img src="../images/0010_001.png" alt="alt text"></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> parselmouth</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tgt</span><br><span class="line"><span class="keyword">from</span> matplotlib.font_manager <span class="keyword">import</span> FontProperties</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置中文字体</span></span><br><span class="line">font = FontProperties(fname=<span class="string">&#x27;/System/Library/Fonts/STHeiti Medium.ttc&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置支持IPA字符的字体</span></span><br><span class="line">ipa_font = FontProperties(fname=<span class="string">&#x27;/Users/xxx/Library/Fonts/DejaVuSans.ttf&#x27;</span>)  <span class="comment"># 确保路径正确</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">remove_outliers_and_zeroes</span>(<span class="params">pitch_values, threshold=<span class="number">3</span></span>):</span><br><span class="line">    <span class="comment"># 将音高值为0的点设置为NaN</span></span><br><span class="line">    pitch_values = np.where(pitch_values != <span class="number">0</span>, pitch_values, np.nan)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算音高值的均值和标准差</span></span><br><span class="line">    mean = np.nanmean(pitch_values)</span><br><span class="line">    std = np.nanstd(pitch_values)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算Z-score</span></span><br><span class="line">    z_scores = (pitch_values - mean) / std</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 将超过阈值的音高值设置为NaN</span></span><br><span class="line">    pitch_values = np.where(np.<span class="built_in">abs</span>(z_scores) &lt; threshold, pitch_values, np.nan)</span><br><span class="line">    <span class="keyword">return</span> pitch_values</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">plot_alignment</span>(<span class="params">audio_path, textgrid_path, title</span>):</span><br><span class="line">    <span class="comment"># 读取音频文件</span></span><br><span class="line">    sound = parselmouth.Sound(audio_path)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 读取TextGrid文件</span></span><br><span class="line">    tg = tgt.io.read_textgrid(textgrid_path)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 提取音高信息</span></span><br><span class="line">    pitch = sound.to_pitch()</span><br><span class="line">    pitch_values = pitch.selected_array[<span class="string">&#x27;frequency&#x27;</span>]</span><br><span class="line">    pitch_times = pitch.xs()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 去除离群值和音高值为0的点</span></span><br><span class="line">    pitch_values = remove_outliers_and_zeroes(pitch_values)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 找到名为&#x27;words&#x27;和&#x27;phones&#x27;的tier</span></span><br><span class="line">    words_tier = tg.get_tier_by_name(<span class="string">&#x27;words&#x27;</span>)</span><br><span class="line">    phones_tier = tg.get_tier_by_name(<span class="string">&#x27;phones&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 绘制音高轮廓</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">14</span>, <span class="number">8</span>))</span><br><span class="line">    plt.plot(pitch_times, pitch_values, <span class="string">&#x27;-&#x27;</span>, markersize=<span class="number">5</span>, color=<span class="string">&#x27;b&#x27;</span>, label=<span class="string">&quot;Pitch&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 从TextGrid中提取单词间隔并绘制</span></span><br><span class="line">    <span class="keyword">for</span> interval <span class="keyword">in</span> words_tier.intervals:</span><br><span class="line">        plt.axvline(x=interval.start_time, color=<span class="string">&#x27;k&#x27;</span>, linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">        plt.text((interval.start_time + interval.end_time) / <span class="number">2</span>, np.nanmax(pitch_values) * <span class="number">0.9</span>, interval.text, </span><br><span class="line">                 horizontalalignment=<span class="string">&#x27;center&#x27;</span>, verticalalignment=<span class="string">&#x27;center&#x27;</span>, color=<span class="string">&#x27;red&#x27;</span>, fontsize=<span class="number">12</span>, fontproperties=font)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 从TextGrid中提取音素间隔并绘制</span></span><br><span class="line">    <span class="keyword">for</span> interval <span class="keyword">in</span> phones_tier.intervals:</span><br><span class="line">        plt.axvline(x=interval.start_time, color=<span class="string">&#x27;gray&#x27;</span>, linestyle=<span class="string">&#x27;:&#x27;</span>)</span><br><span class="line">        plt.text((interval.start_time + interval.end_time) / <span class="number">2</span>, np.nanmax(pitch_values) * <span class="number">0.8</span>, interval.text, </span><br><span class="line">                 horizontalalignment=<span class="string">&#x27;center&#x27;</span>, verticalalignment=<span class="string">&#x27;center&#x27;</span>, color=<span class="string">&#x27;green&#x27;</span>, fontsize=<span class="number">8</span>, fontproperties=ipa_font)</span><br><span class="line">    </span><br><span class="line">    plt.grid(<span class="literal">True</span>)</span><br><span class="line">    plt.title(title, fontproperties=font)</span><br><span class="line">    plt.xlabel(<span class="string">&quot;Time (s)&quot;</span>, fontproperties=font)</span><br><span class="line">    plt.ylabel(<span class="string">&quot;Pitch (Hz)&quot;</span>, fontproperties=font)</span><br><span class="line">    plt.legend(prop=font)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">plot_alignment(<span class="string">&quot;data/speaker1/speaker1.wav&quot;</span>, <span class="string">&quot;data/result/speaker1/speaker1.TextGrid&quot;</span>, <span class="string">&quot;Speaker 1 Alignment&quot;</span>)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MFA/" rel="tag"># MFA</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/02/08/0008-Neural-Networks-and-Deep-Learning-Week2-Notes/" rel="prev" title="【吴恩达 神经网络与深度学习 Neural Networks and Deep Learning】 课程笔记 第二周">
+                  <i class="fa fa-angle-left"></i> 【吴恩达 神经网络与深度学习 Neural Networks and Deep Learning】 课程笔记 第二周
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">林间得鹿</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
