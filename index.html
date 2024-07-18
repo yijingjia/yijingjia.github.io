@@ -235,17 +235,17 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -262,6 +262,117 @@ mjx-container[display="true"] + br {
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/07/18/0011-How-to-add-a-new-commit-between-existing-commits/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="林间得鹿">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="林间得鹿">
+      <meta itemprop="description" content="机器学习初级选手">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 林间得鹿">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/07/18/0011-How-to-add-a-new-commit-between-existing-commits/" class="post-title-link" itemprop="url">修改过去commit中的内容</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-07-18 21:03:43 / 修改时间：21:21:22" itemprop="dateCreated datePublished" datetime="2024-07-18T21:03:43+10:00">2024-07-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>通过Git提交代码时，需要尽量将每次提交的内容原子化及故事化，即每次commit只包含一个最小化的功能，多个commit可以串起开发逻辑，类似多个commit message串起来关于开发过程的故事线。</p>
+<p>但是，在实际的开发中，很难达到这样理想化的结果，经常出现commit后发现又有新的文件要修改，或者多个功能写在了一起并且放在了一条commit中。后期为了维护commit历史需要拆分commit内容，即：<br>
+1.对已commit的内容进行修改<br>
+2.将拆分的内容放在新的commit中。</p>
+<p>针对这两个场景，我们有各自的方法来处理。</p>
+<h2 id="commit后追加新的修改">commit后追加新的修改</h2>
+<p><strong>针对场景1，且仅适用于需要向最后一个commit追加新修改的情况</strong></p>
+<p>对于已经修改好的文件，首先执行<code>git add</code>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add xxx <span class="comment"># xxx为修改对象文件名 或</span></span><br><span class="line">git add --all <span class="comment"># git add所有修改的文件</span></span><br></pre></td></tr></table></figure>
+<p>之后执行下面命令，即可将上面<code>git add</code>的文件追加到最新的commit中。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+<h2 id="修改commit内容">修改commit内容</h2>
+<h3 id="拆分commit文件">拆分commit文件</h3>
+<p><strong>针对场景2，可拆分commit的内容</strong></p>
+<p>首先，查看log，执行<code>git log --graph --oneline</code>找到需要拆分或修改的commit id。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --graph --oneline</span><br><span class="line"><span class="comment"># 得到下面结果</span></span><br><span class="line">51d62f0 this is the latest commit <span class="comment"># 最新commit，包含file1, file2, file3</span></span><br><span class="line">344494a this is the second-to-last commit <span class="comment"># 倒数第二个commit，包含file4</span></span><br><span class="line">xxxxxxx other commit <span class="comment"># 其它更早的commit</span></span><br><span class="line"><span class="comment"># 假如我们要修改倒数第二个commit，那么执行下面命令，从倒数第二个commit开始进行rebase修改。</span></span><br><span class="line">git rebase -i HEAD~2</span><br></pre></td></tr></table></figure>
+<p>此时，我们就处在倒数第二个commit下，可以对这里的内容进行任何修改。</p>
+<p>如果需要对最新commit进行拆分，比如将部分文件放在一个新的commit中，如：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 原来的两个commit</span></span><br><span class="line">51d62f0 this is the latest commit <span class="comment"># 待拆分的commit，包含文件file1, file2, file3， 需要将file3放在新的commit中</span></span><br><span class="line">344494a this is the second-to-last commit <span class="comment"># 倒数第二个commit，包含file4</span></span><br></pre></td></tr></table></figure>
+<p>由于此时我们处在倒数第二个commit即<code>344494a</code>下，最新的commit内容file1,file2,file3还不存在，此时，我们只需要在<code>344494a</code>的基础上，新建file3，然后执行下面命令，即可新建commit：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add file3</span><br><span class="line">git commit -m <span class="string">&quot;this is the newly created commit&quot;</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br></pre></td></tr></table></figure>
+<p>拆分后的commit内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拆分后的commit</span></span><br><span class="line">51d62f0 this is the latest commit <span class="comment"># 拆分后的原commit，此时仅包含文件file1, file2</span></span><br><span class="line">bf67971 this is the newly created commit <span class="comment"># 新拆分出来的commit，包含文件file3</span></span><br><span class="line">344494a this is the second-to-last commit <span class="comment"># 原倒数第二个commit，包含file4</span></span><br></pre></td></tr></table></figure>
+<p>正常情况下，最新的commit即<code>51d62f0</code>中已经不再包含file3。如果包含，那么git没有自动处理，那么可以手动将其删除。由于<code>git rebase --continue</code>后，我们已经处于<code>51d62f0</code>的rebase过程中，因此手动删除后，再执行<code>git commit --amend</code>，此时的修改（删除file4）将会更新进<code>51d62f0</code>中。</p>
+<p>之后继续进行最新commit的修改，直到所有commit都修改完成：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase --<span class="built_in">continue</span></span><br></pre></td></tr></table></figure>
+<h3 id="修改commit文件内容">修改commit文件内容</h3>
+<p><strong>针对场景1</strong></p>
+<p>如果对某个commit的内容进行修改，仍然以上面的几个commit为例。假如我们想要修改原倒数第二个的commit即<code>344494a</code>中file4的内容。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --graph --oneline</span><br><span class="line"><span class="comment"># 得到下面结果</span></span><br><span class="line">51d62f0 this is the latest commit <span class="comment"># 最新commit，包含file1, file2, file3</span></span><br><span class="line">344494a this is the second-to-last commit <span class="comment"># 倒数第二个commit，包含file4</span></span><br><span class="line"><span class="comment"># 从344494a即倒数第二个commit开始rebase</span></span><br><span class="line">git rebase -i HEAD~2</span><br></pre></td></tr></table></figure>
+<p>此时代码的状态是<code>344494a</code>commit后的内容，修改file4后，执行下面命令，即将修改的内容更新进了<code>344494a</code>。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add file4</span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+<p>仍然需要继续进行<code>git rebase --continue</code>，直到所有的commit都rebase完毕。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1293,99 +1404,9 @@ Sequence Models</li>
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://yijingjia.github.io/2024/01/31/How-to-build-up-a-blog-site-using-Hexo-and-GitHub-Pages/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="林间得鹿">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="林间得鹿">
-      <meta itemprop="description" content="机器学习初级选手">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 林间得鹿">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/01/31/How-to-build-up-a-blog-site-using-Hexo-and-GitHub-Pages/" class="post-title-link" itemprop="url">Hexo + GitHub搭建个人博客（Mac版）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2024-01-31 16:17:00" itemprop="dateCreated datePublished" datetime="2024-01-31T16:17:00+11:00">2024-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-02-02 14:31:57" itemprop="dateModified" datetime="2024-02-02T14:31:57+11:00">2024-02-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Hexo%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index"><span itemprop="name">Hexo搭建与使用</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最好的学习方式是思考和分享，写代码的过程中总是希望有个自己的网站记录和分享学习过程。<br>
-查到GitHub+Hexo是目前主流的博客搭建方式、参考多个建站资料帖子后，基于Mac系统进行了博客搭建，同时将搭建过程进行了完整记录，并添加了建站过程中遇到的问题及解决方法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/01/31/How-to-build-up-a-blog-site-using-Hexo-and-GitHub-Pages/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
 
 </div>
   </main>
